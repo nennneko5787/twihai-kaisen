@@ -14,6 +14,7 @@ export default function Items(props: PageProps) {
   const params = use(props.params);
   const { itemId } = params;
   const [item, setItem] = useState<Item | null>(null);
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
 
   useEffect(() => {
     const func = async () => {
@@ -22,9 +23,21 @@ export default function Items(props: PageProps) {
       );
       setItem((await response.json()) as Item);
     };
-
     func();
   }, []);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightboxSrc(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  const getImageSrc = (i: number) =>
+    i === 0
+      ? `https://r2.twks.nennneko5787.net/${itemId}/front.jfif`
+      : `https://r2.twks.nennneko5787.net/${itemId}/${i + 1}.jfif`;
 
   if (item === null) return <></>;
 
@@ -45,29 +58,65 @@ export default function Items(props: PageProps) {
             alignItems: "center",
           }}
         >
-          {[...Array(item.maxPage)].map((_, i) =>
-            i == 0 ? (
-              <img
-                src={`https://r2.twks.nennneko5787.net/${itemId}/front.jfif`}
-                key={i}
-                style={{ maxHeight: "100vh" }}
-                loading="lazy"
-              />
-            ) : (
-              <img
-                src={`https://r2.twks.nennneko5787.net/${itemId}/${i + 1}.jfif`}
-                key={i}
-                style={{ maxHeight: "100vh" }}
-                loading="lazy"
-              />
-            ),
-          )}
+          {[...Array(item.maxPage)].map((_, i) => (
+            <img
+              src={getImageSrc(i)}
+              key={i}
+              style={{ maxHeight: "100vh", cursor: "zoom-in" }}
+              loading="lazy"
+              onClick={() => setLightboxSrc(getImageSrc(i))}
+            />
+          ))}
         </div>
 
         <p className="subtitle">
           <Link href="/">←back</Link>
         </p>
       </div>
+
+      {lightboxSrc && (
+        <div
+          onClick={() => setLightboxSrc(null)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "rgba(0,0,0,0.85)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+            cursor: "zoom-out",
+          }}
+        >
+          <img
+            src={lightboxSrc}
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: "95vw",
+              maxHeight: "95vh",
+              objectFit: "contain",
+              cursor: "default",
+              borderRadius: "4px",
+            }}
+          />
+          <button
+            onClick={() => setLightboxSrc(null)}
+            style={{
+              position: "absolute",
+              top: "1rem",
+              right: "1.25rem",
+              background: "none",
+              border: "none",
+              color: "white",
+              fontSize: "2rem",
+              lineHeight: 1,
+              cursor: "pointer",
+            }}
+          >
+            ×
+          </button>
+        </div>
+      )}
     </section>
   );
 }
