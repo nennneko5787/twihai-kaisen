@@ -6,14 +6,20 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:worker": "opennextjs-cloudflare build",
+    "dev:worker": "wrangler dev --port 8771",
+    "preview:worker": "pnpm run build:worker && pnpm run dev:worker",
+    "deploy:worker": "pnpm run build:worker && wrangler deploy"
   },
   "dependencies": {
+    "bulma": "^1.0.4",
     "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.19.5",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -21,6 +27,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.87.0"
   }
 }
