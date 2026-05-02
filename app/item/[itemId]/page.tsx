@@ -50,14 +50,14 @@ export default function Items(props: PageProps) {
               <img
                 src={`https://r2.twks.nennneko5787.net/${itemId}/front.jfif`}
                 key={i}
-                style={{ height: "100vh" }}
+                style={{ maxHeight: "100vh" }}
                 loading="lazy"
               />
             ) : (
               <img
                 src={`https://r2.twks.nennneko5787.net/${itemId}/${i + 1}.jfif`}
                 key={i}
-                style={{ height: "100vh" }}
+                style={{ maxHeight: "100vh" }}
                 loading="lazy"
               />
             ),

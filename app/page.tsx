@@ -35,7 +35,7 @@ export default function Home() {
             return (
               <Link
                 href={`/item/${item.type}_${item.id}`}
-                className="column is-one-quarter"
+                className="column is-one-third"
                 key={`${item.type}_${item.id}`}
               >
                 <img
