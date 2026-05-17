@@ -6,11 +6,12 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const [manifest, setManifest] = useState<Manifest | null>(null);
+  const [selectedTab, setSelectedTab] = useState("twihai-kaisen");
 
   useEffect(() => {
     const func = async () => {
       const response = await fetch(
-        "https://r2.twks.nennneko5787.net/manifest.json",
+        "https://r2.twihai-kaisen.com/manifest.json",
       );
       setManifest((await response.json()) as Manifest);
     };
@@ -30,8 +31,25 @@ export default function Home() {
           tweets and madness.
         </p>
 
+        <div className="tabs is-centered">
+          <ul>
+            <li className={selectedTab === "twihai-kaisen" ? "is-active" : ""}>
+              <a onClick={() => setSelectedTab("twihai-kaisen")}>Twitfiend Saga</a>
+            </li>
+            <li className={selectedTab === "zero" ? "is-active" : ""}>
+              <a onClick={() => setSelectedTab("zero")}>Twitfiend Saga Zero</a>
+            </li>
+          </ul>
+        </div>
+
         <div className="columns is-multiline is-mobile">
           {manifest.items.map((item) => {
+            if (selectedTab === "twihai-kaisen" && item.type !== "twks") {
+              return null;
+            }
+            if (selectedTab === "zero" && item.type !== "zero") {
+              return null;
+            }
             return (
               <Link
                 href={`/item/${item.type}_${item.id}`}
@@ -39,7 +57,7 @@ export default function Home() {
                 key={`${item.type}_${item.id}`}
               >
                 <img
-                  src={`https://r2.twks.nennneko5787.net/${item.type}_${item.id}/front.jfif`}
+                  src={`https://r2.twihai-kaisen.com/${item.type}_${item.id}/front.jfif`}
                   loading="lazy"
                 ></img>
                 <h2 className="title is-6">

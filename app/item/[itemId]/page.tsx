@@ -10,16 +10,19 @@ interface PageProps {
   }>;
 }
 
+type ReadingMode = "vertical" | "horizontal";
+
 export default function Items(props: PageProps) {
   const params = use(props.params);
   const { itemId } = params;
   const [item, setItem] = useState<Item | null>(null);
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+  const [readingMode, setReadingMode] = useState<ReadingMode>("vertical");
 
   useEffect(() => {
     const func = async () => {
       const response = await fetch(
-        `https://r2.twks.nennneko5787.net/${itemId}/item.json`,
+        `https://r2.twihai-kaisen.com/${itemId}/item.json`,
       );
       setItem((await response.json()) as Item);
     };
@@ -36,10 +39,12 @@ export default function Items(props: PageProps) {
 
   const getImageSrc = (i: number) =>
     i === 0
-      ? `https://r2.twks.nennneko5787.net/${itemId}/front.jfif`
-      : `https://r2.twks.nennneko5787.net/${itemId}/${i + 1}.jfif`;
+      ? `https://r2.twihai-kaisen.com/${itemId}/front.jfif`
+      : `https://r2.twihai-kaisen.com/${itemId}/${i + 1}.jfif`;
 
   if (item === null) return <></>;
+
+  const isVertical = readingMode === "vertical";
 
   return (
     <section className="section">
@@ -50,26 +55,51 @@ export default function Items(props: PageProps) {
           <Link href="/">←back</Link>
         </p>
 
+        <div style={{ marginBottom: "1rem" }}>
+          <button
+            onClick={() =>
+              setReadingMode(isVertical ? "horizontal" : "vertical")
+            }
+            className="button is-small"
+          >
+            {isVertical ? "Switch to horizontal" : "Switch to vertical"}
+          </button>
+        </div>
+
         <div
           className="images"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
+          style={
+            isVertical
+              ? {
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }
+              : {
+                  display: "flex",
+                  flexDirection: "row-reverse",
+                  overflowX: "auto",
+                  alignItems: "flex-start",
+                  gap: "4px",
+                }
+          }
         >
           {[...Array(item.maxPage)].map((_, i) => (
             <img
               src={getImageSrc(i)}
               key={i}
-              style={{ maxHeight: "100vh", cursor: "zoom-in" }}
+              style={{
+                maxHeight: "100vh",
+                cursor: "zoom-in",
+                flexShrink: 0,
+              }}
               loading="lazy"
               onClick={() => setLightboxSrc(getImageSrc(i))}
             />
           ))}
         </div>
 
-        <p className="subtitle">
+        <p className="subtitle" style={{ marginTop: "1rem" }}>
           <Link href="/">←back</Link>
         </p>
       </div>
