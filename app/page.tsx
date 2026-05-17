@@ -26,7 +26,7 @@ export default function Home() {
       <div className="container">
         <h1 className="title is-3">Twitfiend Saga</h1>
         <p className="subtitle">
-          Enter the world of Twitfiend Saga—where obsession never ends. Read for
+          Enter the world of ツイ廃廻戦[Twitfiend Saga]—where obsession never ends. Read for
           free with unlimited access and lose yourself in the endless cycle of
           tweets and madness.
         </p>
